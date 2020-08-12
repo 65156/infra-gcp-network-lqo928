@@ -51,7 +51,7 @@ resource "google_compute_network" "network" {
 module "log_export" {
   source                 = "terraform-google-modules/log-export/google"
   destination_uri        = module.destination.destination_uri
-  log_sink_name          = "logsink"
+  log_sink_name          = "${module.log_export_project.created_project_id}-logsink"
   parent_resource_id     = var.org_id
   parent_resource_type   = "organization"
   unique_writer_identity = true
@@ -62,7 +62,7 @@ module "log_export" {
 module "destination" {
   source                   = "terraform-google-modules/log-export/google//modules/storage"
   project_id               = module.log_export_project.created_project_id
-  storage_bucket_name      = "${var.project_name}-archive"
+  storage_bucket_name      = "${module.log_export_project.created_project_id}-archive"
   log_sink_writer_identity = module.log_export.writer_identity
   storage_class            = "ARCHIVE"
   location                 = "ASIA"

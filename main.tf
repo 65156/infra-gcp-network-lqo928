@@ -192,7 +192,7 @@ resource "google_compute_network_peering" "prod_management_peering" {
 module "aggregate-log-export" {
   source              = ".//modules/aggregate-log-export"
   project_id          = "washington-mgmt-456435"
-  project_name        = "log collector"
+  project_name        = "logging-collector"
   org_id              = local.org_id
   folder_id           = local.auditing_folder_id
   billing_account_id  = local.default_billing_account
