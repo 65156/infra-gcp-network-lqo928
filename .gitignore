@@ -1,4 +1,8 @@
-
+#ignore credentials folder for local authentication for aws and terraform providers
+.credentials/
+.credentials/*
+.terraform/
+.terraform/*
 #ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio

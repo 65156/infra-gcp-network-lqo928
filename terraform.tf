@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "ofx-infrastructure-tf-bkt"
-    prefix = ""
+    bucket = "statefiles-tf-xjdfh2"
+    prefix = "gcp/network"
   }
 }
