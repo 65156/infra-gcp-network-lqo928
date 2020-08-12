@@ -86,7 +86,7 @@ module "stage_network" {
 
   project_labels = {
     application_name = "network"
-    environment      = self.environment
+    environment      = "stage"
     team             = "ice"
   }
 
@@ -101,7 +101,7 @@ module "stage_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zone              = ["private.stg.gcp.ofx.com"]
+  private_dns_zones              = ["private.stg.gcp.ofx.com"]
   private_dns_zone_names        = ["private"]
   private_dns_zone_descriptions = ["private dns zone."]
 
@@ -149,7 +149,7 @@ module "management_network" {
 
 
 resource "google_compute_network_peering" "management_dev_peering" {
-  name         = "peering-management-to-dev-"
+  name         = "peering-management-to-dev"
   network      = module.management_network.vpc_network
   peer_network = module.dev_network.vpc_network
 
@@ -159,7 +159,7 @@ resource "google_compute_network_peering" "dev_management_peering" {
   name         = "peering-dev-to-management"
   network      = module.dev_network.vpc_network
   peer_network = module.management_network.vpc_network
-  depends_on = [google_compute_network_peering.dev_management_peering]
+  depends_on   = [google_compute_network_peering.dev_management_peering]
 }
 
 resource "google_compute_network_peering" "management_stage_peering" {
@@ -172,7 +172,7 @@ resource "google_compute_network_peering" "stage_management_peering" {
   name         = "peering-stage-to-management"
   network      = module.stage_network.vpc_network
   peer_network = module.management_network.vpc_network
-  depends_on = [google_compute_network_peering.dev_management_peering]
+  depends_on   = [google_compute_network_peering.dev_management_peering]
 }
 
 # Create VPC peering between shared service VPC and prod network.
@@ -190,11 +190,10 @@ resource "google_compute_network_peering" "prod_management_peering" {
 }
 
 module "aggregate-log-export" {
-  source              = "../modules/aggregate-log-export"
+  source              = ".//modules/aggregate-log-export"
   project_id          = "log-export"
   project_name        = "log-export"
   org_id              = local.org_id
-  org_prefix          = local.org_prefix
   folder_id           = local.auditing_folder_id
   billing_account_id  = local.default_billing_account
   auto_create_network = false

@@ -7,7 +7,6 @@ variable "org_id" {}
 variable "project_labels" {
   type = map
 }
-variable "org_prefix" {}
 
 variable "folder_id" {}
 

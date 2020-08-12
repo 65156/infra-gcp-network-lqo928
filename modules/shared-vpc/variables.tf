@@ -13,11 +13,6 @@ variable "dns_zone" {
   }
 }
 
-variable "org_prefix" {
-  type        = string
-  description = "Resource identifier prefix."
-}
-
 variable "project_base_id" {
   type        = string
   description = "Project name to be prefixed by organisation short name and postfixed by resource type."
