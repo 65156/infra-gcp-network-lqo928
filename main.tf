@@ -12,7 +12,7 @@ locals {
 # Configure networks
 module "prod_network" {
   source             = ".//modules/shared-vpc"
-  project_base_id    = "network-prod-583929"
+  project_base_id    = "barbados-prod-583929"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
@@ -45,7 +45,7 @@ module "prod_network" {
 
 module "dev_network" {
   source             = ".//modules/shared-vpc"
-  project_base_id    = "network-dev-583929"
+  project_base_id    = "barbados-dev-583929"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
@@ -78,7 +78,7 @@ module "dev_network" {
 
 module "stage_network" {
   source             = ".//modules/shared-vpc"
-  project_base_id    = "network-stage-583929"
+  project_base_id    = "barbados-stage-583929"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
@@ -101,7 +101,7 @@ module "stage_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones              = ["private.stg.gcp.ofx.com"]
+  private_dns_zones             = ["private.stg.gcp.ofx.com"]
   private_dns_zone_names        = ["private"]
   private_dns_zone_descriptions = ["private dns zone."]
 
@@ -112,7 +112,7 @@ module "stage_network" {
 
 module "management_network" {
   source             = ".//modules/shared-vpc"
-  project_base_id    = "network-management-583929"
+  project_base_id    = "barbados-mgmt-583929"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
@@ -191,8 +191,8 @@ resource "google_compute_network_peering" "prod_management_peering" {
 
 module "aggregate-log-export" {
   source              = ".//modules/aggregate-log-export"
-  project_id          = "log-export"
-  project_name        = "log-export"
+  project_id          = "washington-mgmt-456435"
+  project_name        = "log collector"
   org_id              = local.org_id
   folder_id           = local.auditing_folder_id
   billing_account_id  = local.default_billing_account
@@ -200,8 +200,8 @@ module "aggregate-log-export" {
 
   project_labels = {
     application_name = "aggregate_log_export"
-    environment      = "prod"
-    team             = "ice"
+    environment      = "management"
+    team             = "security"
   }
 
   # Network settings host project,network and subnets must exists before hand
@@ -209,7 +209,7 @@ module "aggregate-log-export" {
   shared_vpc_network_name     = ""
   shared_vpc_subnetwork_names = []
 
-  bucket_location = "australia-southeast1"
+  bucket_location = "ASIA"
   admin_user      = "superadmin@ofx.com"
   service_account = "gcp-ofx-adminlog-exporter-sa@ofx-infrastructure.iam.gserviceaccount.com"
 

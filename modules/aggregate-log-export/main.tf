@@ -62,7 +62,7 @@ module "log_export" {
 module "destination" {
   source                   = "terraform-google-modules/log-export/google//modules/storage"
   project_id               = module.log_export_project.created_project_id
-  storage_bucket_name      = "logging"
+  storage_bucket_name      = "${var.project_name}-archive"
   log_sink_writer_identity = module.log_export.writer_identity
   storage_class            = "ARCHIVE"
   location                 = "ASIA"
