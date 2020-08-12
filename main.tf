@@ -11,11 +11,11 @@ locals {
 }
 # Configure networks
 module "prod_network" {
-  source             = "../modules/shared-vpc"
-  project_base_id    = "vpc-prod-5mnd19"
-  project_billing_id = "${local.default_billing_account}"
-  org_id             = "${local.org_id}"
-  folder_id          = "${local.infrastructure_folder_id}"
+  source             = ".//modules/shared-vpc"
+  project_base_id    = "network-prod-583929"
+  project_billing_id = local.default_billing_account
+  org_id             = local.org_id
+  folder_id          = local.infrastructure_folder_id
 
   project_labels = {
     application_name = "network"
@@ -34,7 +34,7 @@ module "prod_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["prd.gcp.ofx.com"]
+  private_dns_zones             = ["private.prd.gcp.ofx.com"]
   private_dns_zone_names        = ["private"]
   private_dns_zone_descriptions = ["private dns zone."]
 
@@ -44,11 +44,11 @@ module "prod_network" {
 }
 
 module "dev_network" {
-  source             = "../modules/shared-vpc"
-  project_base_id    = "vpc-dev-5mnd19"
-  project_billing_id = "${local.default_billing_account}"
-  org_id             = "${local.org_id}"
-  folder_id          = "${local.infrastructure_folder_id}"
+  source             = ".//modules/shared-vpc"
+  project_base_id    = "network-dev-583929"
+  project_billing_id = local.default_billing_account
+  org_id             = local.org_id
+  folder_id          = local.infrastructure_folder_id
 
   project_labels = {
     application_name = "network"
@@ -67,7 +67,7 @@ module "dev_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["dev.gcp.ofx.com"]
+  private_dns_zones             = ["private.dev.gcp.ofx.com"]
   private_dns_zone_names        = ["private"]
   private_dns_zone_descriptions = ["private dns zone."]
 
@@ -77,15 +77,16 @@ module "dev_network" {
 }
 
 module "stage_network" {
-  source             = "../modules/shared-vpc"
-  project_base_id    = "vpc-stage-5mnd19"
-  project_billing_id = "${local.default_billing_account}"
-  org_id             = "${local.org_id}"
-  folder_id          = "${local.infrastructure_folder_id}"
+  source             = ".//modules/shared-vpc"
+  project_base_id    = "network-stage-583929"
+  project_billing_id = local.default_billing_account
+  org_id             = local.org_id
+  folder_id          = local.infrastructure_folder_id
+  environment        = "stage"
 
   project_labels = {
     application_name = "network"
-    environment      = "stage"
+    environment      = self.environment
     team             = "ice"
   }
 
@@ -100,7 +101,7 @@ module "stage_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zone              = ["private.gcp.ofx.com"]
+  private_dns_zone              = ["private.stg.gcp.ofx.com"]
   private_dns_zone_names        = ["private"]
   private_dns_zone_descriptions = ["private dns zone."]
 
@@ -110,14 +111,14 @@ module "stage_network" {
 }
 
 module "management_network" {
-  source             = "../modules/shared-vpc"
-  project_base_id    = "vpchost-management-5mnd19"
-  project_billing_id = "${local.default_billing_account}"
-  org_id             = "${local.org_id}"
-  folder_id          = "${local.infrastructure_folder_id}"
+  source             = ".//modules/shared-vpc"
+  project_base_id    = "network-management-583929"
+  project_billing_id = local.default_billing_account
+  org_id             = local.org_id
+  folder_id          = local.infrastructure_folder_id
 
   project_labels = {
-    application_name = "management-host-vpc"
+    application_name = "network"
     environment      = "management"
     team             = "ice"
   }
@@ -133,7 +134,7 @@ module "management_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["private.gcp.ofx.com"]
+  private_dns_zones             = ["private.mgt.gcp.ofx.com"]
   private_dns_zone_names        = ["private"]
   private_dns_zone_descriptions = ["private dns zone."]
 
@@ -143,59 +144,59 @@ module "management_network" {
 }
 
 # Create VPC peering between shared services network and non prod network
+
+
+
+
 resource "google_compute_network_peering" "management_dev_peering" {
   name         = "peering-management-to-dev-"
-  network      = "${module.management_network.vpc_network}"
-  peer_network = "${module.dev_network.vpc_network}"
-
-}
-
-resource "google_compute_network_peering" "management_stage_peering" {
-  name         = "peering-management-to-stage"
-  network      = "${module.management_network.vpc_network}"
-  peer_network = "${module.test_network.vpc_network}"
-  depends_on   = ["google_compute_network_peering.management_dev_peering"]
+  network      = module.management_network.vpc_network
+  peer_network = module.dev_network.vpc_network
 
 }
 
 resource "google_compute_network_peering" "dev_management_peering" {
   name         = "peering-dev-to-management"
-  network      = "${module.dev_network.vpc_network}"
-  peer_network = "${module.management_network.vpc_network}"
-
-  depends_on = ["google_compute_network_peering.management_test_peering"]
+  network      = module.dev_network.vpc_network
+  peer_network = module.management_network.vpc_network
+  depends_on = [google_compute_network_peering.dev_management_peering]
 }
 
-resource "google_compute_network_peering" "test_management_peering" {
-  name         = "peering-test-to-management"
-  network      = "${module.test_network.vpc_network}"
-  peer_network = "${module.management_network.vpc_network}"
-
-  depends_on = ["google_compute_network_peering.dev_management_peering"]
+resource "google_compute_network_peering" "management_stage_peering" {
+  name         = "peering-management-to-stage"
+  network      = module.management_network.vpc_network
+  peer_network = module.stage_network.vpc_network
 }
+
+resource "google_compute_network_peering" "stage_management_peering" {
+  name         = "peering-stage-to-management"
+  network      = module.stage_network.vpc_network
+  peer_network = module.management_network.vpc_network
+  depends_on = [google_compute_network_peering.dev_management_peering]
+}
+
 # Create VPC peering between shared service VPC and prod network.
 resource "google_compute_network_peering" "management_prod_peering" {
   name         = "peering-management-to-prod"
-  network      = "${module.management_network.vpc_network}"
-  peer_network = "${module.prod_network.vpc_network}"
-  depends_on   = ["google_compute_network_peering.test_management_peering"]
+  network      = module.management_network.vpc_network
+  peer_network = module.prod_network.vpc_network
 }
 
 resource "google_compute_network_peering" "prod_management_peering" {
   name         = "peering-prod-to-management"
-  network      = "${module.prod_network.vpc_network}"
-  peer_network = "${module.management_network.vpc_network}"
-  depends_on   = ["google_compute_network_peering.management_prod_peering"]
+  network      = module.prod_network.vpc_network
+  peer_network = module.management_network.vpc_network
+  depends_on   = [google_compute_network_peering.management_prod_peering]
 }
 
 module "aggregate-log-export" {
   source              = "../modules/aggregate-log-export"
-  project_id          = "${local.org_prefix}-log-export"
-  project_name        = "${local.org_prefix}-log-export"
-  org_id              = "${local.org_id}"
-  org_prefix          = "${local.org_prefix}"
-  folder_id           = "${local.auditing_folder_id}"
-  billing_account_id  = "${local.default_billing_account}"
+  project_id          = "log-export"
+  project_name        = "log-export"
+  org_id              = local.org_id
+  org_prefix          = local.org_prefix
+  folder_id           = local.auditing_folder_id
+  billing_account_id  = local.default_billing_account
   auto_create_network = false
 
   project_labels = {
