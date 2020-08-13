@@ -13,7 +13,7 @@ locals {
 module "prod_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-prod-583929"
-  project_base_name  = "network-prod"
+  project_base_name  = "network-production"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
