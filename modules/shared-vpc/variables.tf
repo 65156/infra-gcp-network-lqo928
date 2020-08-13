@@ -1,16 +1,21 @@
 variable "environment" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 
 variable "dns_zone" {
   type = map
-  default =  {
-    dev = "dev.gcp.ofx.com"
-    stage = "stg.gcp.ofx.com"
-    prod = "prd.gcp.ofx.com"
+  default = {
+    dev        = "dev.gcp.ofx.com"
+    stage      = "stg.gcp.ofx.com"
+    prod       = "prd.gcp.ofx.com"
     management = "mgt.gcp.ofx.com"
   }
+}
+
+variable "project_base_name" {
+  type        = string
+  description = "Project name to be prefixed by organisation short name and postfixed by resource type."
 }
 
 variable "project_base_id" {

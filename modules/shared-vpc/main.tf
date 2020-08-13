@@ -1,7 +1,5 @@
 # Create host VPC project
 locals {
-
-
   activate_apis = [
     "compute.googleapis.com",
     "oslogin.googleapis.com",
@@ -18,7 +16,7 @@ locals {
 }
 
 resource "google_project" "shared_vpc_host_project" {
-  name                = var.project_base_id
+  name                = var.project_base_name
   project_id          = var.project_base_id
   folder_id           = var.folder_id
   billing_account     = var.project_billing_id
@@ -39,7 +37,7 @@ resource "google_project_service" "shared_vpc_api" {
 
 # Create custom network
 resource "google_compute_network" "shared_vpc" {
-  name                    = "${var.environment}-network"
+  name                    = var.project_base_name
   project                 = google_project.shared_vpc_host_project.project_id
   auto_create_subnetworks = false
   depends_on              = [google_project.shared_vpc_host_project, google_project_service.shared_vpc_api]
@@ -72,29 +70,29 @@ resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
 }
 
 
-  # provisioner "local-exec" {
-  #   command = <<EOF
-  #     ${path.module}/create-dns.sh \
-  #       ${google_project.shared_vpc_host_project.project_id} \
-  #       "${join("|", var.private_dns_zones)}" \
-  #       "${join("|", var.private_dns_zone_names)}" \
-  #       "${join("|", var.private_dns_zone_descriptions)}" \
-  #       "${google_compute_network.shared_vpc.name}" \
-  #       "${join("|", var.private_a_records)}" \
-  #       "${var.inbound_dns_forwarding_policy_name}" \
-  #       "${var.inbound_dns_forwarding_policy_desc}" 
-  #   EOF
-  # }
+# provisioner "local-exec" {
+#   command = <<EOF
+#     ${path.module}/create-dns.sh \
+#       ${google_project.shared_vpc_host_project.project_id} \
+#       "${join("|", var.private_dns_zones)}" \
+#       "${join("|", var.private_dns_zone_names)}" \
+#       "${join("|", var.private_dns_zone_descriptions)}" \
+#       "${google_compute_network.shared_vpc.name}" \
+#       "${join("|", var.private_a_records)}" \
+#       "${var.inbound_dns_forwarding_policy_name}" \
+#       "${var.inbound_dns_forwarding_policy_desc}" 
+#   EOF
+# }
 
-  # provisioner "local-exec" {
-  #   when = "destroy"
+# provisioner "local-exec" {
+#   when = "destroy"
 
-  #   command = <<EOF
-  #     ${path.module}/destroy-dns.sh \
-  #       "${google_project.shared_vpc_host_project.project_id}" \
-  #       "${join("|", var.private_dns_zones)}" \
-  #       "${var.inbound_dns_forwarding_policy_name}"
-  #   EOF
-  # }
+#   command = <<EOF
+#     ${path.module}/destroy-dns.sh \
+#       "${google_project.shared_vpc_host_project.project_id}" \
+#       "${join("|", var.private_dns_zones)}" \
+#       "${var.inbound_dns_forwarding_policy_name}"
+#   EOF
+# }
 
 
