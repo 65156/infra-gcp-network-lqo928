@@ -13,7 +13,7 @@ locals {
 module "prod_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-prod-583929"
-  project_base_name  = "network-production"
+  project_base_name  = "infrastructure-production"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
@@ -27,7 +27,8 @@ module "prod_network" {
   # Ensure that count of subnet names, CIDR ranges and regions are the same.
   # The shared-vpc module will loop through the subnet names and pick up 
   # CIDR ranges and region that corresponds to the same index as the subnet name.
-  subnet_names = var.subnet_names
+  subnet_names    = var.subnet_names
+  subnetwork_name = "production-vpc"
 
   subnet_cidr                     = ["10.48.0.0/21", "10.48.16.0/21"]
   subnet_region                   = var.subnet_region
@@ -35,9 +36,13 @@ module "prod_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["private.prd.gcp.ofx.com"]
-  private_dns_zone_names        = ["private"]
-  private_dns_zone_descriptions = ["private dns zone."]
+  private_dns_zones             = "private.prd.gcp.ofx.com"
+  private_dns_zone_names        = "private"
+  private_dns_zone_descriptions = "private dns zone."
+
+  public_dns_zones             = "prd.gcp.ofx.com"
+  public_dns_zone_names        = "public"
+  public_dns_zone_descriptions = "public dns zone."
 
   private_a_records = [
 
@@ -48,7 +53,7 @@ module "dev_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-dev-583929"
   project_billing_id = local.default_billing_account
-  project_base_name  = "network-development"
+  project_base_name  = "infrastructure-development"
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
 
@@ -61,7 +66,8 @@ module "dev_network" {
   # Ensure that count of subnet names, CIDR ranges and regions are the same.
   # The shared-vpc module will loop through the subnet names and pick up 
   # CIDR ranges and region that corresponds to the same index as the subnet name.
-  subnet_names = var.subnet_names
+  subnet_names    = var.subnet_names
+  subnetwork_name = "development-vpc"
 
   subnet_cidr                     = ["10.32.0.0/21", "10.32.16.0/21"]
   subnet_region                   = var.subnet_region
@@ -69,9 +75,13 @@ module "dev_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["private.dev.gcp.ofx.com"]
-  private_dns_zone_names        = ["private"]
-  private_dns_zone_descriptions = ["private dns zone."]
+  private_dns_zones             = "private.dev.gcp.ofx.com"
+  private_dns_zone_names        = "private"
+  private_dns_zone_descriptions = "private dns zone."
+
+  public_dns_zones             = "dev.gcp.ofx.com"
+  public_dns_zone_names        = "public"
+  public_dns_zone_descriptions = "public dns zone."
 
   private_a_records = [
 
@@ -82,7 +92,7 @@ module "stage_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-stage-583929"
   project_billing_id = local.default_billing_account
-  project_base_name  = "network-staging"
+  project_base_name  = "infrastructure-staging"
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
   environment        = "stage"
@@ -96,17 +106,21 @@ module "stage_network" {
   # Ensure that count of subnet names, CIDR ranges and regions are the same.
   # The shared-vpc module will loop through the subnet names and pick up 
   # CIDR ranges and region that corresponds to the same index as the subnet name.
-  subnet_names = var.subnet_names
-
+  subnet_names                    = var.subnet_names
+  subnetwork_name                 = "staging-vpc"
   subnet_cidr                     = ["10.40.0.0/21", "10.40.16.0/21"]
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["private.stg.gcp.ofx.com"]
-  private_dns_zone_names        = ["private"]
-  private_dns_zone_descriptions = ["private dns zone."]
+  private_dns_zones             = "private.stg.gcp.ofx.com"
+  private_dns_zone_names        = "private"
+  private_dns_zone_descriptions = "private dns zone."
+
+  public_dns_zones             = "stg.gcp.ofx.com"
+  public_dns_zone_names        = "public"
+  public_dns_zone_descriptions = "public dns zone."
 
   private_a_records = [
 
@@ -117,7 +131,7 @@ module "management_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-mgmt-583929"
   project_billing_id = local.default_billing_account
-  project_base_name  = "network-management"
+  project_base_name  = "infrastructure-management"
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
 
@@ -130,17 +144,22 @@ module "management_network" {
   # Ensure that count of subnet names, CIDR ranges and regions are the same.
   # The shared-vpc module will loop through the subnet names and pick up 
   # CIDR ranges and region that corresponds to the same index as the subnet name.
-  subnet_names = var.subnet_names
-
+  subnet_names                    = var.subnet_names
+  subnetwork_name                 = "management-vpc"
   subnet_cidr                     = ["10.39.0.0/21", "10.39.16.0/21"]
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = ["private.mgt.gcp.ofx.com"]
-  private_dns_zone_names        = ["private"]
-  private_dns_zone_descriptions = ["private dns zone."]
+  private_dns_zones             = "private.mgt.gcp.ofx.com"
+  private_dns_zone_names        = "private"
+  private_dns_zone_descriptions = "private dns zone."
+
+  ignore_public                = "true" # if true will NOT deploy a public zone.
+  public_dns_zones             = "mgt.gcp.ofx.com"
+  public_dns_zone_names        = "public"
+  public_dns_zone_descriptions = "public dns zone."
 
   private_a_records = [
 

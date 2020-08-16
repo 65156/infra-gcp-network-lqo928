@@ -37,7 +37,7 @@ resource "google_project_service" "shared_vpc_api" {
 
 # Create custom network
 resource "google_compute_network" "shared_vpc" {
-  name                    = var.project_base_name
+  name                    = var.subnetwork_name
   project                 = google_project.shared_vpc_host_project.project_id
   auto_create_subnetworks = false
   depends_on              = [google_project.shared_vpc_host_project, google_project_service.shared_vpc_api]
@@ -67,6 +67,35 @@ resource "google_compute_subnetwork" "shared_vpc_subnet" {
 resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
   project    = google_project.shared_vpc_host_project.project_id
   depends_on = [google_project.shared_vpc_host_project]
+}
+
+
+# Public Zone
+resource "google_dns_managed_zone" "public-zone" {
+  count = var.ignore_public ? 0 : 1
+  name        = var.public_dns_zone_names
+  dns_name    = var.public_dns_zones
+  description = var.public_dns_zone_descriptions
+  project    = google_project.shared_vpc_host_project.project_id
+}
+
+# Private Zone
+resource "google_dns_managed_zone" "private-zone" {
+  name        = var.private_dns_zone_names
+  dns_name    = var.private_dns_zones
+  description = var.private_dns_zone_descriptions
+  project    = google_project.shared_vpc_host_project.project_id
+  labels = {
+    foo = "bar"
+  }
+
+  visibility = "private"
+
+  private_visibility_config {
+    networks {
+      network_url = google_compute_network.shared_vpc.id
+    }
+  }
 }
 
 

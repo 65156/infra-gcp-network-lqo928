@@ -33,6 +33,11 @@ variable "project_labels" {
   description = "Labels for the billing export project."
 }
 
+variable "subnetwork_name" {
+  type = string
+  default = ""
+}
+
 variable "subnet_names" {
   type        = list
   description = "List of subnet names"
@@ -78,21 +83,21 @@ variable "asn" {
 }
 
 variable "private_dns_zones" {
-  type        = list
+  type        = string
   description = "FQDN of private DNS zones."
-  default     = []
+  default     = ""
 }
 
 variable "private_dns_zone_names" {
-  type        = list
+  type        = string
   description = "Names of private DNS zones."
-  default     = []
+  default     = ""
 }
 
 variable "private_dns_zone_descriptions" {
-  type        = list
+  type        = string
   description = "Descriptions of private DNS zones."
-  default     = []
+  default     = ""
 }
 
 variable "private_a_records" {
@@ -102,21 +107,21 @@ variable "private_a_records" {
 }
 
 variable "public_dns_zones" {
-  type        = list
+  type        = string
   description = "FQDN of private DNS zones."
-  default     = []
+  default     = ""
 }
 
 variable "public_dns_zone_names" {
-  type        = list
+  type        = string
   description = "Names of private DNS zones."
-  default     = []
+  default     = ""
 }
 
 variable "public_dns_zone_descriptions" {
-  type        = list
+  type        = string
   description = "Descriptions of private DNS zones."
-  default     = []
+  default     = ""
 }
 
 variable "public_a_records" {
@@ -140,3 +145,8 @@ variable "inbound_dns_forwarding_policy_desc" {
 variable "org_id" {}
 
 variable "folder_id" {}
+
+variable "ignore_public" {
+type = bool
+default = "false"
+}
