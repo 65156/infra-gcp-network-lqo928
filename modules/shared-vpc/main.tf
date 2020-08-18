@@ -10,6 +10,7 @@ locals {
     "dns.googleapis.com",
     "container.googleapis.com",
     "bigqueryreservation.googleapis.com",
+    "servicedirectory.googleapis.com",
   ]
 
   # api_set = toset(locals.activate_apis)
@@ -45,7 +46,6 @@ resource "google_compute_network" "shared_vpc" {
 }
 
 # Create subnets
-
 resource "google_compute_subnetwork" "shared_vpc_subnet" {
   count                    = length(var.subnet_names)
   name                     = var.subnet_names[count.index]
@@ -70,58 +70,5 @@ resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
 }
 
 
-# Public Zone
-resource "google_dns_managed_zone" "public-zone" {
-  count = var.ignore_public ? 0 : 1
-  name        = var.public_dns_zone_names
-  dns_name    = var.public_dns_zones
-  description = var.public_dns_zone_descriptions
-  project    = google_project.shared_vpc_host_project.project_id
-}
-
-# Private Zone
-resource "google_dns_managed_zone" "private-zone" {
-  name        = var.private_dns_zone_names
-  dns_name    = var.private_dns_zones
-  description = var.private_dns_zone_descriptions
-  project    = google_project.shared_vpc_host_project.project_id
-  labels = {
-    foo = "bar"
-  }
-
-  visibility = "private"
-
-  private_visibility_config {
-    networks {
-      network_url = google_compute_network.shared_vpc.id
-    }
-  }
-}
-
-
-# provisioner "local-exec" {
-#   command = <<EOF
-#     ${path.module}/create-dns.sh \
-#       ${google_project.shared_vpc_host_project.project_id} \
-#       "${join("|", var.private_dns_zones)}" \
-#       "${join("|", var.private_dns_zone_names)}" \
-#       "${join("|", var.private_dns_zone_descriptions)}" \
-#       "${google_compute_network.shared_vpc.name}" \
-#       "${join("|", var.private_a_records)}" \
-#       "${var.inbound_dns_forwarding_policy_name}" \
-#       "${var.inbound_dns_forwarding_policy_desc}" 
-#   EOF
-# }
-
-# provisioner "local-exec" {
-#   when = "destroy"
-
-#   command = <<EOF
-#     ${path.module}/destroy-dns.sh \
-#       "${google_project.shared_vpc_host_project.project_id}" \
-#       "${join("|", var.private_dns_zones)}" \
-#       "${var.inbound_dns_forwarding_policy_name}"
-#   EOF
-# }
 
 

@@ -55,17 +55,6 @@ resource "google_compute_shared_vpc_service_project" "vpc_service_project" {
   depends_on      = [google_project.service_project]
   host_project    = var.host_project_id
   service_project = google_project.service_project.project_id
-
-  # provisioner "local-exec" {
-  #   command = <<EOF
-  #     gcloud beta dns managed-zones create ${var.project_id}-default-mz \
-  #       --visibility=private \
-  #       --description="Activate DNS service for VPC Service Controls" \
-  #       --dns-name=. \
-  #       --project=${var.project_id} \
-  #       --networks=
-  #   EOF
-  # }
 }
 
 locals {

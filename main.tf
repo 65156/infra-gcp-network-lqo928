@@ -36,11 +36,11 @@ module "prod_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = "private.prd.gcp.ofx.com"
+  private_dns_zones             = "private.prd.gcp.ofx.com."
   private_dns_zone_names        = "private"
   private_dns_zone_descriptions = "private dns zone."
 
-  public_dns_zones             = "prd.gcp.ofx.com"
+  public_dns_zones             = "prd.gcp.ofx.com."
   public_dns_zone_names        = "public"
   public_dns_zone_descriptions = "public dns zone."
 
@@ -75,11 +75,11 @@ module "dev_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = "private.dev.gcp.ofx.com"
+  private_dns_zones             = "private.dev.gcp.ofx.com."
   private_dns_zone_names        = "private"
   private_dns_zone_descriptions = "private dns zone."
 
-  public_dns_zones             = "dev.gcp.ofx.com"
+  public_dns_zones             = "dev.gcp.ofx.com."
   public_dns_zone_names        = "public"
   public_dns_zone_descriptions = "public dns zone."
 
@@ -114,11 +114,11 @@ module "stage_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = "private.stg.gcp.ofx.com"
+  private_dns_zones             = "private.stg.gcp.ofx.com."
   private_dns_zone_names        = "private"
   private_dns_zone_descriptions = "private dns zone."
 
-  public_dns_zones             = "stg.gcp.ofx.com"
+  public_dns_zones             = "stg.gcp.ofx.com."
   public_dns_zone_names        = "public"
   public_dns_zone_descriptions = "public dns zone."
 
@@ -152,12 +152,12 @@ module "management_network" {
   subnet_enable_flow_logs         = true
   # asn                             = 
 
-  private_dns_zones             = "private.mgt.gcp.ofx.com"
+  private_dns_zones             = "private.mgt.gcp.ofx.com."
   private_dns_zone_names        = "private"
   private_dns_zone_descriptions = "private dns zone."
 
   ignore_public                = "true" # if true will NOT deploy a public zone.
-  public_dns_zones             = "mgt.gcp.ofx.com"
+  public_dns_zones             = "mgt.gcp.ofx.com."
   public_dns_zone_names        = "public"
   public_dns_zone_descriptions = "public dns zone."
 
