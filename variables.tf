@@ -9,6 +9,29 @@ variable "global" {
   }
 }
 
+variable "subnet_cidr_dev" {
+  type        = list
+  description = "subnets to provision"
+  default     = ["10.32.0.0/21", "10.32.16.0/21"]
+}
+
+variable "subnet_cidr_stage" {
+  type        = list
+  description = "subnets to provision"
+  default     = ["10.40.0.0/21", "10.40.16.0/21"]
+}
+variable "subnet_cidr_prod" {
+  type        = list
+  description = "subnets to provision"
+  default     = ["10.48.0.0/21", "10.48.16.0/21"]
+}
+
+variable "subnet_cidr_mgmt" {
+  type        = list
+  description = "subnets to provision"
+  default     = ["10.39.0.0/21", "10.39.16.0/21"]
+}
+
 variable "subnet_names" {
   type        = list
   description = "List of subnet names"

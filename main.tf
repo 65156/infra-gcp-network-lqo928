@@ -30,7 +30,7 @@ module "prod_network" {
   subnet_names    = var.subnet_names
   subnetwork_name = "production-vpc"
 
-  subnet_cidr                     = ["10.48.0.0/21", "10.48.16.0/21"]
+  subnet_cidr                     = var.subnet_cidr_prod
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
@@ -69,7 +69,7 @@ module "dev_network" {
   subnet_names    = var.subnet_names
   subnetwork_name = "development-vpc"
 
-  subnet_cidr                     = ["10.32.0.0/21", "10.32.16.0/21"]
+  subnet_cidr                     = var.subnet_cidr_dev
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
@@ -108,7 +108,7 @@ module "stage_network" {
   # CIDR ranges and region that corresponds to the same index as the subnet name.
   subnet_names                    = var.subnet_names
   subnetwork_name                 = "staging-vpc"
-  subnet_cidr                     = ["10.40.0.0/21", "10.40.16.0/21"]
+  subnet_cidr                     = var.subnet_cidr_stage
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
@@ -146,7 +146,7 @@ module "management_network" {
   # CIDR ranges and region that corresponds to the same index as the subnet name.
   subnet_names                    = var.subnet_names
   subnetwork_name                 = "management-vpc"
-  subnet_cidr                     = ["10.39.0.0/21", "10.39.16.0/21"]
+  subnet_cidr                     = var.subnet_cidr_mgmt
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true

@@ -70,36 +70,29 @@ resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
 }
 
 resource "random_string" "UUID" {
-  length = 6
+  length  = 5
+  number  = false
+  upper   = false
   special = false
-  lower = true
-  number = true
 }
 
 # Configure Cloud NAT (One Per Region)
 resource "google_compute_router" "router" {
   count   = length(distinct(var.subnet_region))
-  name    = "cr-nat--${random_string.UUID.result}"
-  region  = distinct(var.subnet_region[count.index])
+  name    = "cr-nat-${random_string.UUID.result}"
+  region  = distinct(var.subnet_region)[count.index]
   network = google_compute_network.shared_vpc.id
   project = google_project.shared_vpc_host_project.project_id
 }
 
-resource "google_compute_address" "address" {
-  count  = length(distinct(var.subnet_region))*2
-  name   = "nat-ip--${random_string.UUID.result}-0${count.index+1}"
-  region = distinct(var.subnet_region[count.index])
-}
-
 resource "google_compute_router_nat" "nat" {
   count   = length(distinct(var.subnet_region))
-  name   = "cn-gateway-${random_string.UUID.result}"
-  router = google_compute_router.router[count.index].name
-  region = distinct(var.subnet_region[count.index])
+  name    = "cn-gateway-${random_string.UUID.result}"
+  router  = google_compute_router.router[count.index].name
+  region  = google_compute_router.router[count.index].region
+  project = google_project.shared_vpc_host_project.project_id
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips                = google_compute_address.address.*.self_link
-
+  nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES"
 
   log_config {

@@ -34,7 +34,7 @@ variable "project_labels" {
 }
 
 variable "subnetwork_name" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -147,6 +147,6 @@ variable "org_id" {}
 variable "folder_id" {}
 
 variable "ignore_public" {
-type = bool
-default = "false"
+  type    = bool
+  default = "false"
 }
