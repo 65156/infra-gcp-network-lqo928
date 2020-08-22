@@ -166,11 +166,56 @@ module "management_network" {
   ]
 }
 
+# Create Service Accounts for Logging and Deployment
+
+# Define roles
+locals {
+  roles_deployment = [
+    "roles/Owner",
+    "roles/compute.networkAdmin",
+    "roles/compute.admin",
+    "roles/iam.securityAdmin",
+    "roles/iam.organizationRoleAdmin",
+    "roles/iam.serviceAccountAdmin",
+    "roles/bigquery.admin",
+    "roles/storage.admin",
+    "roles/resourcemanager.organizationAdmin",
+    "roles/resourcemanager.projectIamAdmin",
+  ]
+
+  roles_logging = [
+    "roles/compute.networkUser",
+  ]
+}
+
+# Create service account to be used for log exports
+resource "google_service_account" "service_account_01" {
+  account_id   = "sa-org-logging"
+  display_name = "Service Account used for log exports"
+  project = module.management_network.created_project_id
+}
+
+# Create service account used for org management
+resource "google_service_account" "service_account_02" {
+  account_id   = "sa-org-deploy"
+  display_name = "Service Account used to deploy terraform code."
+  project = module.management_network.created_project_id
+}
+
+# Create bucket for terraform deployment
+resource "google_storage_bucket" "bucket" {
+  name          = "statefiles-tf-xjdfh3"
+  location      = "US"
+  project = module.management_network.created_project_id
+
+    versioning {
+      enable = "true"
+    }
+
+}
+ 
+
 # Create VPC peering between shared services network and non prod network
-
-
-
-
 resource "google_compute_network_peering" "management_dev_peering" {
   name         = "peering-management-to-dev"
   network      = module.management_network.vpc_network

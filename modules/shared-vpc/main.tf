@@ -69,17 +69,10 @@ resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
   depends_on = [google_project.shared_vpc_host_project]
 }
 
-resource "random_string" "UUID" {
-  length  = 5
-  number  = false
-  upper   = false
-  special = false
-}
-
 # Configure Cloud NAT (One Per Region)
 resource "google_compute_router" "router" {
   count   = length(distinct(var.subnet_region))
-  name    = "cr-nat-${random_string.UUID.result}"
+  name    = "cr-nat-default"
   region  = distinct(var.subnet_region)[count.index]
   network = google_compute_network.shared_vpc.id
   project = google_project.shared_vpc_host_project.project_id
@@ -87,7 +80,7 @@ resource "google_compute_router" "router" {
 
 resource "google_compute_router_nat" "nat" {
   count   = length(distinct(var.subnet_region))
-  name    = "cn-gateway-${random_string.UUID.result}"
+  name    = "cn-gateway-default"
   router  = google_compute_router.router[count.index].name
   region  = google_compute_router.router[count.index].region
   project = google_project.shared_vpc_host_project.project_id

@@ -80,12 +80,6 @@ resource "google_project_iam_member" "compute_networkuser_cloudsvc" {
   member     = "serviceAccount:${google_project.service_project.number}@cloudservices.gserviceaccount.com"
 }
 
-locals {
-  gcp_subnet_service_account_roles = [
-    "roles/compute.networkUser",
-  ]
-}
-
 #Create subnetwork IAM binding to allow service project to use subnetwork in host project.
 resource "google_compute_subnetwork_iam_member" "compute_subnetworkuser_compute_sa" {
   count      = length(var.shared_vpc_subnetwork_names) >= 1 ? length(var.shared_vpc_subnetwork_names) : 0
