@@ -34,19 +34,7 @@ module "prod_network" {
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
-  # asn                             = 
 
-  private_dns_zones             = "private.prd.gcp.ofx.com."
-  private_dns_zone_names        = "private"
-  private_dns_zone_descriptions = "private dns zone."
-
-  public_dns_zones             = "prd.gcp.ofx.com."
-  public_dns_zone_names        = "public"
-  public_dns_zone_descriptions = "public dns zone."
-
-  private_a_records = [
-
-  ]
 }
 
 module "dev_network" {
@@ -73,19 +61,6 @@ module "dev_network" {
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
-  # asn                             = 
-
-  private_dns_zones             = "private.dev.gcp.ofx.com."
-  private_dns_zone_names        = "private"
-  private_dns_zone_descriptions = "private dns zone."
-
-  public_dns_zones             = "dev.gcp.ofx.com."
-  public_dns_zone_names        = "public"
-  public_dns_zone_descriptions = "public dns zone."
-
-  private_a_records = [
-
-  ]
 }
 
 module "stage_network" {
@@ -112,19 +87,6 @@ module "stage_network" {
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
-  # asn                             = 
-
-  private_dns_zones             = "private.stg.gcp.ofx.com."
-  private_dns_zone_names        = "private"
-  private_dns_zone_descriptions = "private dns zone."
-
-  public_dns_zones             = "stg.gcp.ofx.com."
-  public_dns_zone_names        = "public"
-  public_dns_zone_descriptions = "public dns zone."
-
-  private_a_records = [
-
-  ]
 }
 
 module "management_network" {
@@ -150,70 +112,19 @@ module "management_network" {
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
-  # asn                             = 
-
-  private_dns_zones             = "private.mgt.gcp.ofx.com."
-  private_dns_zone_names        = "private"
-  private_dns_zone_descriptions = "private dns zone."
-
-  ignore_public                = "true" # if true will NOT deploy a public zone.
-  public_dns_zones             = "mgt.gcp.ofx.com."
-  public_dns_zone_names        = "public"
-  public_dns_zone_descriptions = "public dns zone."
-
-  private_a_records = [
-
-  ]
-}
-
-# Create Service Accounts for Logging and Deployment
-
-# Define roles
-locals {
-  roles_deployment = [
-    "roles/Owner",
-    "roles/compute.networkAdmin",
-    "roles/compute.admin",
-    "roles/iam.securityAdmin",
-    "roles/iam.organizationRoleAdmin",
-    "roles/iam.serviceAccountAdmin",
-    "roles/bigquery.admin",
-    "roles/storage.admin",
-    "roles/resourcemanager.organizationAdmin",
-    "roles/resourcemanager.projectIamAdmin",
-  ]
-
-  roles_logging = [
-    "roles/compute.networkUser",
-  ]
-}
-
-# Create service account to be used for log exports
-resource "google_service_account" "service_account_01" {
-  account_id   = "sa-org-logging"
-  display_name = "Service Account used for log exports"
-  project = module.management_network.created_project_id
-}
-
-# Create service account used for org management
-resource "google_service_account" "service_account_02" {
-  account_id   = "sa-org-deploy"
-  display_name = "Service Account used to deploy terraform code."
-  project = module.management_network.created_project_id
 }
 
 # Create bucket for terraform deployment
 resource "google_storage_bucket" "bucket" {
-  name          = "statefiles-tf-xjdfh3"
-  location      = "US"
-  project = module.management_network.created_project_id
+  name     = "statefiles-tf-xjdfh3"
+  location = "US"
+  project  = module.management_network.project_id
 
-    versioning {
-      enable = "true"
-    }
+  versioning {
+    enabled = "true"
+  }
 
 }
- 
 
 # Create VPC peering between shared services network and non prod network
 resource "google_compute_network_peering" "management_dev_peering" {
@@ -256,7 +167,7 @@ resource "google_compute_network_peering" "prod_management_peering" {
   peer_network = module.management_network.vpc_network
   depends_on   = [google_compute_network_peering.management_prod_peering]
 }
-
+/*
 module "aggregate-log-export" {
   source              = ".//modules/aggregate-log-export"
   project_id          = "washington-mgmt-456435"
@@ -283,6 +194,7 @@ module "aggregate-log-export" {
 
 
 }
+*/
 
 # Allow Nagios, SSH, ICMP and HTTPS traffic from on-premise management servers
 # resource "google_compute_firewall" "firewall_prod_ingress_allow_management_traffic" {
