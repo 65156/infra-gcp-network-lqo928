@@ -128,27 +128,27 @@ resource "google_storage_bucket" "bucket" {
 
 # Create VPC peering between shared services network and non prod network
 resource "google_compute_network_peering" "management_dev_peering" {
-  name         = "peering-management-to-dev"
+  name         = "management-to-dev"
   network      = module.management_network.vpc_network
   peer_network = module.dev_network.vpc_network
 
 }
 
 resource "google_compute_network_peering" "dev_management_peering" {
-  name         = "peering-dev-to-management"
+  name         = "dev-to-management"
   network      = module.dev_network.vpc_network
   peer_network = module.management_network.vpc_network
   depends_on   = [google_compute_network_peering.dev_management_peering]
 }
 
 resource "google_compute_network_peering" "management_stage_peering" {
-  name         = "peering-management-to-stage"
+  name         = "management-to-stage"
   network      = module.management_network.vpc_network
   peer_network = module.stage_network.vpc_network
 }
 
 resource "google_compute_network_peering" "stage_management_peering" {
-  name         = "peering-stage-to-management"
+  name         = "stage-to-management"
   network      = module.stage_network.vpc_network
   peer_network = module.management_network.vpc_network
   depends_on   = [google_compute_network_peering.dev_management_peering]
@@ -156,13 +156,13 @@ resource "google_compute_network_peering" "stage_management_peering" {
 
 # Create VPC peering between shared service VPC and prod network.
 resource "google_compute_network_peering" "management_prod_peering" {
-  name         = "peering-management-to-prod"
+  name         = "management-to-prod"
   network      = module.management_network.vpc_network
   peer_network = module.prod_network.vpc_network
 }
 
 resource "google_compute_network_peering" "prod_management_peering" {
-  name         = "peering-prod-to-management"
+  name         = "prod-to-management"
   network      = module.prod_network.vpc_network
   peer_network = module.management_network.vpc_network
   depends_on   = [google_compute_network_peering.management_prod_peering]
