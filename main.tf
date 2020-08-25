@@ -168,4 +168,3 @@ resource "google_compute_network_peering" "prod_management_peering" {
   depends_on   = [google_compute_network_peering.management_prod_peering]
 }
 
-
