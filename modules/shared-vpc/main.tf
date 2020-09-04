@@ -42,7 +42,7 @@ resource "google_compute_network" "shared_vpc" {
   project                 = google_project.shared_vpc_host_project.project_id
   auto_create_subnetworks = false
   depends_on              = [google_project.shared_vpc_host_project, google_project_service.shared_vpc_api]
-
+  routing_mode            = "GLOBAL"
 }
 
 # Create subnets
