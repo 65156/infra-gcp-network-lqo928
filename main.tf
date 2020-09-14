@@ -10,33 +10,6 @@ locals {
   auditing_folder_id       = "864576503732"
 }
 # Configure networks
-module "prod_network" {
-  source             = ".//modules/shared-vpc"
-  project_base_id    = "barbados-prod-583929"
-  project_base_name  = "infrastructure-production"
-  project_billing_id = local.default_billing_account
-  org_id             = local.org_id
-  folder_id          = local.infrastructure_folder_id
-
-  project_labels = {
-    application_name = "network"
-    environment      = "prod"
-    team             = "ice"
-  }
-
-  # Ensure that count of subnet names, CIDR ranges and regions are the same.
-  # The shared-vpc module will loop through the subnet names and pick up 
-  # CIDR ranges and region that corresponds to the same index as the subnet name.
-  subnet_names    = var.subnet_names
-  subnetwork_name = "production-vpc"
-
-  subnet_cidr                     = var.subnet_cidr_prod
-  subnet_region                   = var.subnet_region
-  subnet_private_ip_google_access = true
-  subnet_enable_flow_logs         = true
-
-}
-
 module "dev_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-dev-583929"
@@ -87,6 +60,33 @@ module "stage_network" {
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
+}
+
+module "prod_network" {
+  source             = ".//modules/shared-vpc"
+  project_base_id    = "barbados-prod-583929"
+  project_base_name  = "infrastructure-production"
+  project_billing_id = local.default_billing_account
+  org_id             = local.org_id
+  folder_id          = local.infrastructure_folder_id
+
+  project_labels = {
+    application_name = "network"
+    environment      = "prod"
+    team             = "ice"
+  }
+
+  # Ensure that count of subnet names, CIDR ranges and regions are the same.
+  # The shared-vpc module will loop through the subnet names and pick up 
+  # CIDR ranges and region that corresponds to the same index as the subnet name.
+  subnet_names    = var.subnet_names
+  subnetwork_name = "production-vpc"
+
+  subnet_cidr                     = var.subnet_cidr_prod
+  subnet_region                   = var.subnet_region
+  subnet_private_ip_google_access = true
+  subnet_enable_flow_logs         = true
+
 }
 
 module "management_network" {
