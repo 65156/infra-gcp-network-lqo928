@@ -8,6 +8,11 @@ locals {
   default_resource_zone    = "australia-southeast1-b"
   infrastructure_folder_id = "864576503732"
   auditing_folder_id       = "864576503732"
+
+  management_apis = [
+    "cloudresourcemanager.googleapis.com",
+    "serviceusage.googleapis.com",
+  ]
 }
 # Configure networks
 module "dev_network" {
@@ -115,9 +120,10 @@ module "management_network" {
 }
 
 #cloud Resource manager API enable 
-resource "google_project_service" "enable_resource_manager_api" {
+resource "google_project_service" "management_apis" {
+  count      = length(local.management_apis)
   project    = "barbados-mgmt-583929"
-  service    = "cloudresourcemanager.googleapis.com"
+  service    = local.management_apis[count.index]
 }
 
 # Create bucket for terraform deployment
