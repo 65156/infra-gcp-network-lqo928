@@ -114,6 +114,12 @@ module "management_network" {
   subnet_enable_flow_logs         = true
 }
 
+#cloud Resource manager API enable 
+resource "google_project_service" "enable_resource_manager_api" {
+  project    = "barbados-mgmt-583929"
+  service    = "cloudresourcemanager.googleapis.com"
+}
+
 # Create bucket for terraform deployment
 resource "google_storage_bucket" "bucket" {
   name     = "statefiles-tf-xjdfh3"
