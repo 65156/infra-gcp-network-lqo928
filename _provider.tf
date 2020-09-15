@@ -8,7 +8,7 @@ provider "google-beta" {
 
 terraform {
   backend "gcs" {
-    bucket = "statefiles-tf-xjdfh2"
+    bucket = "terraform-statefiles-xjdfh3"
     prefix = "gcp/network"
   }
 }

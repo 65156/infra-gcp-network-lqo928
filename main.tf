@@ -128,7 +128,7 @@ resource "google_project_service" "management_apis" {
 
 # Create bucket for terraform deployment
 resource "google_storage_bucket" "bucket" {
-  name     = "statefiles-tf-xjdfh3"
+  name     = "terraform-statefiles-xjdfh3"
   location = "US"
   project  = module.management_network.project_id
 
