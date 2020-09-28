@@ -9,9 +9,14 @@ locals {
   infrastructure_folder_id = "864576503732"
   auditing_folder_id       = "864576503732"
 
-  management_apis = [
+  management_apis = [ # leveraged by service account in management project to deploy services
     "cloudresourcemanager.googleapis.com",
     "serviceusage.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "iam.googleapis.com",
+    "compute.googleapis.com",
+    "accesscontextmanager.googleapis.com", 
+    
   ]
 }
 # Configure networks

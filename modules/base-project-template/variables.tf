@@ -22,9 +22,9 @@ variable "shared_vpc_network_name" {}
 #Name of subnetwork in shared VPC network reserved for this service project
 
 variable "shared_vpc_subnetwork_names" {
-  type        = list
+  type        = map()
   description = "List of subnet names"
-  default     = []
+  default     = {}
 }
 
 variable "region" {
