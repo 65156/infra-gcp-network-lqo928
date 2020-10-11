@@ -16,7 +16,6 @@ locals {
     "iam.googleapis.com",
     "compute.googleapis.com",
     "accesscontextmanager.googleapis.com", 
-    
   ]
 }
 # Configure networks
