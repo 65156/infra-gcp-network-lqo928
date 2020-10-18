@@ -1,4 +1,3 @@
-# TODO 
 output "project_id" {
   value = "${google_project.shared_vpc_host_project.project_id}"
 }
@@ -37,4 +36,7 @@ output "subnet_ids" {
 
 output "vpc_network" {
   value = "${google_compute_network.shared_vpc.self_link}"
+}
+output "nat_ips" {
+  value = ["${google_compute_address.nat_ip_0.*.address}","${google_compute_address.nat_ip_1.*.address}"]
 }

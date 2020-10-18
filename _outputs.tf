@@ -37,3 +37,15 @@ output "management_project" {
 output "infrastructure_bucket" {
   value = google_storage_bucket.bucket
 }
+output "management_nat_ips" {
+  value = "${module.management_network.nat_ips}"
+}
+output "production_nat_ips" {
+  value = "${module.prod_network.nat_ips}"
+}
+output "development_nat_ips" {
+  value = "${module.dev_network.nat_ips}"
+}
+output "staging_nat_ips" {
+  value = "${module.stage_network.nat_ips}"
+}

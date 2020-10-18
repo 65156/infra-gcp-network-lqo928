@@ -78,6 +78,22 @@ resource "google_compute_router" "router" {
   project = google_project.shared_vpc_host_project.project_id
 }
 
+# Create Nat IP
+resource "google_compute_address" "nat_ip_0" {
+  count   = length(distinct(var.subnet_region))
+  name    = "cr-nat-default-ip-01"
+  region  = google_compute_router.router[count.index].region
+  project = google_project.shared_vpc_host_project.project_id
+}
+
+# Create Nat IP
+resource "google_compute_address" "nat_ip_1" {
+  count   = length(distinct(var.subnet_region))
+  name    = "cr-nat-default-ip-02"
+  region  = google_compute_router.router[count.index].region
+  project = google_project.shared_vpc_host_project.project_id
+}
+
 resource "google_compute_router_nat" "nat" {
   count   = length(distinct(var.subnet_region))
   name    = "cn-gateway-default"
@@ -85,7 +101,8 @@ resource "google_compute_router_nat" "nat" {
   region  = google_compute_router.router[count.index].region
   project = google_project.shared_vpc_host_project.project_id
 
-  nat_ip_allocate_option             = "AUTO_ONLY"
+  nat_ip_allocate_option             = "MANUAL_ONLY"
+  nat_ips                            = ["${google_compute_address.nat_ip_0[count.index].self_link}", "${google_compute_address.nat_ip_1[count.index].self_link}"]
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES"
 
   log_config {

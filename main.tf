@@ -15,7 +15,7 @@ locals {
     "cloudbilling.googleapis.com",
     "iam.googleapis.com",
     "compute.googleapis.com",
-    "accesscontextmanager.googleapis.com", 
+    "accesscontextmanager.googleapis.com",
   ]
 }
 # Configure networks
@@ -125,9 +125,9 @@ module "management_network" {
 
 #cloud Resource manager API enable 
 resource "google_project_service" "management_apis" {
-  count      = length(local.management_apis)
-  project    = "barbados-mgmt-583929"
-  service    = local.management_apis[count.index]
+  count   = length(local.management_apis)
+  project = "barbados-mgmt-583929"
+  service = local.management_apis[count.index]
 }
 
 # Create bucket for terraform deployment
