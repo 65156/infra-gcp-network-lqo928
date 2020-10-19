@@ -23,7 +23,7 @@ module "dev_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-dev-583929"
   project_billing_id = local.default_billing_account
-  project_base_name  = "infrastructure-development"
+  project_base_name  = "Shared VPC - Development"
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
 
@@ -49,7 +49,7 @@ module "stage_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-stage-583929"
   project_billing_id = local.default_billing_account
-  project_base_name  = "infrastructure-staging"
+  project_base_name  = "Shared VPC - Staging"
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
   environment        = "stage"
@@ -74,7 +74,7 @@ module "stage_network" {
 module "prod_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-prod-583929"
-  project_base_name  = "infrastructure-production"
+  project_base_name  = "Shared VPC - Production"
   project_billing_id = local.default_billing_account
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
@@ -102,7 +102,7 @@ module "management_network" {
   source             = ".//modules/shared-vpc"
   project_base_id    = "barbados-mgmt-583929"
   project_billing_id = local.default_billing_account
-  project_base_name  = "infrastructure-management"
+  project_base_name  = "Shared VPC - Management"
   org_id             = local.org_id
   folder_id          = local.infrastructure_folder_id
 
