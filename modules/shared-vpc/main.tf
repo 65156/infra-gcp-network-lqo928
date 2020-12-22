@@ -11,6 +11,7 @@ locals {
     "container.googleapis.com",
     "bigqueryreservation.googleapis.com",
     "servicedirectory.googleapis.com",
+    "servicenetworking.googleapis.com",
   ]
 
   # api_set = toset(locals.activate_apis)
