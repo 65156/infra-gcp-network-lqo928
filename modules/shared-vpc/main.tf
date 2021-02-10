@@ -71,9 +71,9 @@ resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
 }
 
 # Create Service Networking in each VPC
-resource "google_compute_global_address" "private_ip_alloc" {
-  count         = var.is_management == "true" ? 0 : 1
-  name          = "private-ip-alloc"
+resource "google_compute_global_address" "service_networking" {
+  count         = var.is_management == true ? 0 : 1
+  name          = "service-networking"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   address       = cidrhost(var.subnet_service_networking,0)
@@ -83,10 +83,10 @@ resource "google_compute_global_address" "private_ip_alloc" {
 }
 
 resource "google_service_networking_connection" "default" {
-  count                   = var.is_management == "true" ? 0 : 1
-  network                 = google_project.shared_vpc_host_project.project_id
+  count                   = var.is_management == true ? 0 : 1
+  network                 = google_compute_network.shared_vpc.self_link #google_project.shared_vpc_host_project.project_id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc[0].name]
+  reserved_peering_ranges = [google_compute_global_address.service_networking[0].name]
 }
 
 # Configure Cloud NAT (One Per Region)

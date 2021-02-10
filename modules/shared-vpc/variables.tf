@@ -89,5 +89,5 @@ variable "subnet_serverless" {
   default = false
 }
 variable "is_management" {
-  default = "false"
+  default = false
   }
