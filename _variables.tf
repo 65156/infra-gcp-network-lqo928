@@ -45,3 +45,8 @@ variable "subnet_private_ip_google_access" {
 variable "subnet_enable_flow_logs" {
   default = true
 }
+
+  
+
+
+  

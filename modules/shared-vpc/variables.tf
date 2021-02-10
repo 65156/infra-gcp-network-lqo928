@@ -77,10 +77,17 @@ variable "allow_ingress_icmp_source_ranges" {
 }
 
 variable "org_id" {}
-
 variable "folder_id" {}
-
 variable "ignore_public" {
   type    = bool
   default = "false"
 }
+variable "subnet_service_networking" {
+  default = "10.0.0.0/16"
+}
+variable "subnet_serverless" {
+  default = false
+}
+variable "is_management" {
+  default = "false"
+  }

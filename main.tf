@@ -41,8 +41,12 @@ module "dev_network" {
 
   subnet_cidr                     = var.subnet_cidr_dev
   subnet_region                   = var.subnet_region
+  subnet_service_networking       = "10.32.24.0/24"
+  subnet_serverless               = "10.32.31.0/28"
+
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
+  
 }
 
 module "stage_network" {
@@ -67,8 +71,11 @@ module "stage_network" {
   subnetwork_name                 = "staging-vpc"
   subnet_cidr                     = var.subnet_cidr_stage
   subnet_region                   = var.subnet_region
+  subnet_service_networking       = "10.40.24.0/24"
+  subnet_serverless               = "10.40.31.0/28"
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
+
 }
 
 module "prod_network" {
@@ -93,6 +100,8 @@ module "prod_network" {
 
   subnet_cidr                     = var.subnet_cidr_prod
   subnet_region                   = var.subnet_region
+  subnet_service_networking       = "10.48.24.0/24"
+  subnet_serverless               = "10.48.31.0/28"
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
 
@@ -121,6 +130,8 @@ module "management_network" {
   subnet_region                   = var.subnet_region
   subnet_private_ip_google_access = true
   subnet_enable_flow_logs         = true
+
+  is_management                   = true
 }
 
 #cloud Resource manager API enable 
