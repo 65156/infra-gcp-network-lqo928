@@ -83,10 +83,10 @@ variable "ignore_public" {
   default = "false"
 }
 variable "subnet_service_networking" {
-  default = "10.0.0.0/16"
+  default = "10.0.0.0/24"
 }
 variable "subnet_serverless" {
-  default = false
+  default = "10.0.0.0/28"
 }
 variable "is_management" {
   default = false

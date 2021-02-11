@@ -12,6 +12,7 @@ locals {
     "bigqueryreservation.googleapis.com",
     "servicedirectory.googleapis.com",
     "servicenetworking.googleapis.com",
+    "vpcaccess.googleapis.com",
   ]
 
   # api_set = toset(locals.activate_apis)
@@ -34,7 +35,6 @@ resource "google_project_service" "shared_vpc_api" {
   service = local.activate_apis[count.index]
   # disable_on_destroy = true
   disable_dependent_services = true
-  # depends_on = ["google_project.shared_vpc_host_project"]
 }
 
 # Create custom network
@@ -87,6 +87,17 @@ resource "google_service_networking_connection" "default" {
   network                 = google_compute_network.shared_vpc.self_link #google_project.shared_vpc_host_project.project_id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.service_networking[0].name]
+}
+
+resource "google_vpc_access_connector" "serverless" { #logic needs to be improved to support multiple regions
+  count         = var.is_management == true ? 0 : 1
+  name          = "serverless"
+  ip_cidr_range = var.subnet_serverless
+  region        = var.subnet_region[count.index]
+  project       = google_project.shared_vpc_host_project.project_id
+  network       = var.subnetwork_name
+  depends_on    = ["google_project_service.shared_vpc_api"]
+
 }
 
 # Configure Cloud NAT (One Per Region)
